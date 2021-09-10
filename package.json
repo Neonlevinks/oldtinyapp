@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/Neonlevinks/tinyapp/issues"
   },
-  "homepage": "https://github.com/Neonlevinks/tinyapp#readme"
+  "homepage": "https://github.com/Neonlevinks/tinyapp#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }

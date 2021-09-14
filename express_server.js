@@ -99,7 +99,20 @@ app.post("/login", (req, res) => {
 app.post("/logout", (req, res) => {
   res.clearCookie("username")
   res.redirect("/urls");
-})
+});
+
+app.post("/register", (req, res) => {
+  const user = generateRandomString();
+  users.user = {
+    id: user,
+    email: req.body.email,
+    password: req.body.password
+  }  
+  res.cookie("user_id", users.user.id);
+  console.log(users.user.id);
+  res.redirect("/urls",);
+});
+
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 });

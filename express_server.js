@@ -14,6 +14,19 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+const users = {
+  "userID": {
+    id: "userID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur"
+  },
+  "user2ID": {
+    id: "user2ID",
+    email: "user2@example.com",
+    password: "dishwasher-sink"
+  }
+}
+
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
@@ -71,6 +84,11 @@ app.post("/urls/:shortURL/update", (req, res) => {
   const editedURL = req.body.text;
   urlDatabase[shortURL] = editedURL;
   res.redirect(`/urls/${shortURL}`);
+});
+
+app.get("/register", (req, res) => {
+  const templateVars = { username: req.cookies["username"]};
+  res.render("urls_register", templateVars);
 });
 
 app.post("/login", (req, res) => {

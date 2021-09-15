@@ -109,7 +109,6 @@ app.post("/register", (req, res) => {
     password: req.body.password
   }  
   res.cookie("user_id", users.user.id);
-  console.log(users.user.id);
   res.redirect("/urls",);
 });
 

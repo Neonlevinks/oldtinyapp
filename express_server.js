@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
+const { request } = require("express");
 const PORT = 8080;
 const generateRandomString = () => Math.random().toString(36).substr(2, 6) //make a 6 character string of random alphanumeric characters
 
@@ -40,14 +41,23 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
+  console.log(users)
+  const userid = req.cookies["user_id"]
   const templateVars = { 
-    username: req.cookies["username"],
-    urls: urlDatabase};
+    user_id: userid,
+    user: users[userid],
+    urls: urlDatabase,
+  };
   res.render("urls_index", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
-  const templateVars = { username: req.cookies["username"]};
+  const userid = req.cookies["user_id"];
+  console.log(userid);
+  const templateVars = { 
+    user_id: req.cookies["user_id"],
+    user: users[userid]
+  };
   res.render("urls_new", templateVars);
 });
 
@@ -59,10 +69,11 @@ app.post("/urls", (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
+  const userid = req.cookies["user_id"];
   const templateVars = { 
     shortURL: req.params.shortURL, 
     longURL: urlDatabase[req.params.shortURL],
-    username: req.cookies["username"]
+    user_id: userid
   };
   res.render("urls_show", templateVars);
 });
@@ -87,29 +98,31 @@ app.post("/urls/:shortURL/update", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
-  const templateVars = { username: req.cookies["username"]};
+  const templateVars = {
+    user: null, 
+    user_id: req.cookies["user_id"]};
   res.render("urls_register", templateVars);
 });
 
 app.post("/login", (req, res) => {
-  res.cookie("username", req.body.username);
+  res.cookie("user_id", req.body.username);
   res.redirect("/urls",);
 });
 
 app.post("/logout", (req, res) => {
-  res.clearCookie("username")
+  res.clearCookie("user_id")
   res.redirect("/urls");
 });
 
 app.post("/register", (req, res) => {
   const user = generateRandomString();
-  users.user = {
+  users[user] = {
     id: user,
     email: req.body.email,
     password: req.body.password
-  }  
-  res.cookie("user_id", users.user.id);
-  res.redirect("/urls",);
+  };  
+  res.cookie("user_id", users[user].id);
+  res.redirect("/urls") ;
 });
 
 app.listen(PORT, () => {

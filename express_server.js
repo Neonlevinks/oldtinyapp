@@ -103,6 +103,13 @@ app.get("/register", (req, res) => {
   res.render("urls_register", templateVars);
 });
 
+app.get("/login", (req, res) => {
+  const templateVars = {
+    user: null, 
+    user_id: req.cookies["user_id"]};
+  res.render("login", templateVars);
+})
+
 app.post("/login", (req, res) => {
   res.cookie("user_id", req.body.username);
   res.redirect("/urls",);
@@ -115,6 +122,11 @@ app.post("/logout", (req, res) => {
 
 app.post("/register", (req, res) => {
   const user = generateRandomString();
+  for (const object in users) {
+    if (users[object].email === req.body.email) {
+      res.status(400).send("Email is already registered").end
+    }
+  };
   users[user] = {
     id: user,
     email: req.body.email,
@@ -122,12 +134,6 @@ app.post("/register", (req, res) => {
   };  
   if (!users[user].email || !users[user].password) {
     res.status(400).send("Invalid input").end();
-  };
-  const checkEmail = users[user].email;
-  for (const object in users) {
-    if (users[object].email === checkEmail) {
-      res.status(400).send("Email is already registered").end
-    }
   };
   res.cookie("user_id", users[user].id);
   res.redirect("/urls") ;

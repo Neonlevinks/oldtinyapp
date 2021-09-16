@@ -41,7 +41,6 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  console.log(users)
   const userid = req.cookies["user_id"]
   const templateVars = { 
     user_id: userid,
@@ -121,6 +120,15 @@ app.post("/register", (req, res) => {
     email: req.body.email,
     password: req.body.password
   };  
+  if (!users[user].email || !users[user].password) {
+    res.status(400).send("Invalid input").end();
+  };
+  const checkEmail = users[user].email;
+  for (const object in users) {
+    if (users[object].email === checkEmail) {
+      res.status(400).send("Email is already registered").end
+    }
+  };
   res.cookie("user_id", users[user].id);
   res.redirect("/urls") ;
 });

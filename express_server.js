@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
-const { request } = require("express");
+const { request, response } = require("express");
 const PORT = 8080;
 const generateRandomString = () => Math.random().toString(36).substr(2, 6) //make a 6 character string of random alphanumeric characters
 
@@ -110,8 +110,14 @@ app.get("/login", (req, res) => {
 })
 
 app.post("/login", (req, res) => {
-  res.cookie("user_id", req.body.username);
-  res.redirect("/urls",);
+  for (const object in users) {
+    if (users[object].email === req.body.email && users[object].password === req.body.password) {
+      res.cookie("user_id", object);
+      return res.redirect("/urls",);
+    } else {
+      res.status(403).send("Incorrect email/password").end;
+    };
+  };
 });
 
 app.post("/logout", (req, res) => {

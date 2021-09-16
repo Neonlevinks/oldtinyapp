@@ -14,12 +14,8 @@
             <button type="submit">Logout</button>
           </form>
         <% }; %>
-        <% if(!user_id) { %>
-          <form method="POST" action="/login">
-            <input type="text" name="username">
-            <button type="submit">Sign In</button>
-          </form>
-        <% }; %>
+        <button><a href="/login">Login</a></button>
+        <button><a href="/register">Register</a></button>
         </div>
       </div>
     </div>

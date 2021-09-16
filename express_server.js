@@ -52,7 +52,6 @@ app.get("/urls", (req, res) => {
 
 app.get("/urls/new", (req, res) => {
   const userid = req.cookies["user_id"];
-  console.log(userid);
   const templateVars = { 
     user_id: req.cookies["user_id"],
     user: users[userid]

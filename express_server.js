@@ -73,10 +73,11 @@ app.get("/urls/new", (req, res) => {
     return res.redirect("/login");
   }
   const userid = req.cookies["user_id"]
+  const filteredDB = urlFinder(userid);
   const templateVars = { 
     user_id: userid,
     user: users[userid],
-    urls: urlDatabase,
+    urls: filteredDB,
   };
   res.render("urls_new", templateVars);
 });
@@ -84,7 +85,8 @@ app.get("/urls/new", (req, res) => {
 app.post("/urls", (req, res) => {
   const shortURL = generateRandomString();
   const longURL = req.body.longURL;
-  urlDatabase[shortURL] = {longURL};
+  const userid = req.cookies["user_id"]
+  urlDatabase[shortURL] = {longURL: longURL, userID: userid };
   res.redirect(`/urls/${shortURL}`);
 });
 
@@ -138,7 +140,7 @@ app.get("/login", (req, res) => {
   res.render("login", templateVars);
 })
 
-const findUser = (email, password) => {
+const urlsForUser = (email, password) => {
   for (const object in users) {
     if (users[object].email === email && users[object].password === password) {
       return object;
@@ -147,7 +149,7 @@ const findUser = (email, password) => {
 }
 
 app.post("/login", (req, res) => {
-  const userID = findUser(req.body.email, req.body.password)
+  const userID = urlsForUser(req.body.email, req.body.password)
   if (userID) {
     res.cookie("user_id", userID);
     return res.redirect("/urls",);
